@@ -8,12 +8,25 @@ namespace CarGame.Managers
     {
         public GameState currentState { get; private set; }
 
+        public Controller Player
+        {
+            get { return player; }
+            set { player = value; }
+        }
+        [SerializeField] private Controller player;
+
         private LevelManager _levelManager;
 
         protected override void Awake()
         {
             base.Awake();
             _levelManager = GetComponent<LevelManager>();
+        }
+        private void Start()
+        {
+            ChangeState(GameState.GameAwaitingStart);
+
+
         }
 
         public void ChangeState(GameState newState)
@@ -51,6 +64,7 @@ namespace CarGame.Managers
         private void GameWonState()
         {
             // if son araçsa bir sonraki bölüme geç yoksa sonraki arabaya geç
+            _levelManager.LevelWon();
         }
         private void GameLostState()
         {

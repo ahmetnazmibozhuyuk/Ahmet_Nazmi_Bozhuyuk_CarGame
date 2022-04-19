@@ -13,7 +13,7 @@ namespace CarGame
         [SerializeField] private ControllersList controllersList;
 
         [Header("Movement Properties")]
-        [Range(0.05f,0.4f)]
+        [Range(0.1f,1f)]
         [SerializeField] private float maxForwardSpeed;
         [Tooltip("Determines how fast the vehicle will accelerate upon start.")]
         [SerializeField] private float forwardAcceleration;
@@ -38,10 +38,19 @@ namespace CarGame
         }
         private void Update()
         {
-            //if (GameManager.instance.currentState != GameState.GameStarted) return;
             AssignInput();
             SetMovement();
 
+        }
+
+        private void FixedUpdate()
+        {
+
+        }
+        public void InitializePlayerForNextIteration(Vector3 position, Quaternion rotation)
+        {
+            _lerpVal = 0;
+            transform.SetPositionAndRotation(position, rotation);
         }
         private void OnCollisionEnter(Collision collision)
         {
@@ -52,28 +61,32 @@ namespace CarGame
             }
             collision.gameObject.GetComponent<ICrash>().Crash();
         }
-        private void SetMovement()
-        {
-            _lerpVal += Time.deltaTime * forwardAcceleration;
-            _speedValue = Mathf.Lerp(0, maxForwardSpeed, _lerpVal);
-            _rigidbody.MovePosition(_rigidbody.position+transform.forward*_speedValue);
-        }
-        private void FixedUpdate()
-        {
 
-        }
+
+        #region Input - Movement Handler
         private void SetRotation()
         {
+            if (GameManager.instance.currentState != GameState.GameStarted)
+                return;
+
             _rigidbody.MoveRotation(Quaternion.Euler(0, _rigidbody.transform.rotation.eulerAngles.y + _rotateValue, 0));
         }
-        #region Input Handler
+        private void SetMovement()
+        {
+            if (GameManager.instance.currentState != GameState.GameStarted) return;
+            _lerpVal += Time.deltaTime * forwardAcceleration;
+            _speedValue = Mathf.Lerp(0, maxForwardSpeed * 0.05f, _lerpVal);
+            _rigidbody.MovePosition(_rigidbody.position + transform.forward * _speedValue);
+        }
         private void LeftInputActive()
         {
+            if (GameManager.instance.currentState == GameState.GameAwaitingStart) GameManager.instance.ChangeState(GameState.GameStarted);
             _rotateValue = -maxSteer;
             SetRotation();
         }
         private void RightInputActive()
         {
+            if (GameManager.instance.currentState == GameState.GameAwaitingStart) GameManager.instance.ChangeState(GameState.GameStarted);
             _rotateValue = maxSteer;
             SetRotation();
         }

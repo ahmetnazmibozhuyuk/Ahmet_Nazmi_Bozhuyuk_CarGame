@@ -11,7 +11,6 @@ namespace CarGame.Obstacles
 
         public void Crash()
         {
-            // car crash sfx, particles
             Debug.Log("HIT A RECORDED CAR!");
             GameManager.instance.ChangeState(GameState.GameLost);
         }

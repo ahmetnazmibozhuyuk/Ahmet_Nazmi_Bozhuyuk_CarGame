@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using CarGame.Obstacles;
 using UnityEngine;
 
 namespace CarGame
@@ -8,7 +7,6 @@ namespace CarGame
     public class LevelPiece : ScriptableObject
     {
         public GameObject LevelPrefab;
-        public Vector3[] StartingPoints = new Vector3[8];
-        public Vector3[] EndingPoints = new Vector3[8];
+
     }
 }
