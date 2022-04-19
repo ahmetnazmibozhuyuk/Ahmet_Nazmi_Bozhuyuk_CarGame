@@ -1619,7 +1619,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1146562095
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2572,12 +2572,12 @@ MonoBehaviour:
     ExitIndex: 0
   - EnterIndex: 2
     ExitIndex: 8
-  - EnterIndex: 0
+  - EnterIndex: 15
     ExitIndex: 0
-  - EnterIndex: 0
-    ExitIndex: 0
-  - EnterIndex: 0
-    ExitIndex: 0
+  - EnterIndex: 1
+    ExitIndex: 2
+  - EnterIndex: 3
+    ExitIndex: 14
   - EnterIndex: 0
     ExitIndex: 0
   - EnterIndex: 0

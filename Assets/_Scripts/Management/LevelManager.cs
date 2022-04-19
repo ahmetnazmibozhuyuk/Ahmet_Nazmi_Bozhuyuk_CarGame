@@ -18,7 +18,8 @@ namespace CarGame.Managers
         [SerializeField] private LevelStartGoalPoints _startGoalPointClass;
 
         [SerializeField] private EnterExitIndex[] enterExitPoints = new EnterExitIndex[8];
-        private List<PosRot>[] _carRecords = new List<PosRot>[8];
+
+
 
 
         // burada queue oluşsun her seferinde diğer tüm araçlara gitsin diğer araçlarda uzunluk sıfırsa disable bu queue'yu doldurmayı dene değilse enable olup 
@@ -42,9 +43,12 @@ namespace CarGame.Managers
         private void SetStartAndExit(int start, int goal)
         {
             //startGoalPoints[i].startGoalPointInfo.StartOrGoal = StartOrGoal.
-            startGoalPoints[start].SetAsStartOrGoal(StartOrGoal.Start);
-            startGoalPoints[goal].SetAsStartOrGoal(StartOrGoal.Goal);
-
+            for(int i = 0; i < startGoalPoints.Count; i++)
+            {
+                if(i == start) startGoalPoints[i].SetAsStartOrGoal(StartOrGoal.Start);
+                else if (i == goal) startGoalPoints[i].SetAsStartOrGoal(StartOrGoal.Goal);
+                else startGoalPoints[i].SetAsStartOrGoal(StartOrGoal.Obstacle);
+            }
 
             GameManager.instance.Player.InitializePlayerForNextIteration
                 (startGoalPoints[start].gameObject.transform.position, startGoalPoints[start].gameObject.transform.rotation);
@@ -77,7 +81,8 @@ namespace CarGame.Managers
         public void RestartIteration()
         {
             Debug.Log("restart iteration");
-            //aktif queue temizle, oyunu awaiting starta getir.
+            SetStartAndExit(enterExitPoints[CurrentIteration].EnterIndex, enterExitPoints[CurrentIteration].ExitIndex);
+            GameManager.instance.ChangeState(GameState.GameAwaitingStart);
         }
         public void RestartLevel()
         {

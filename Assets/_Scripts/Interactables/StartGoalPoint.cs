@@ -20,6 +20,7 @@ namespace CarGame.Obstacles
             {
                 case StartOrGoal.Obstacle:
                     _pointMat.color = Color.red;
+                    _collider.isTrigger = false;
                     break;
                 case StartOrGoal.Start:
                     _pointMat.color = Color.blue;
@@ -27,6 +28,22 @@ namespace CarGame.Obstacles
                     break;
                 case StartOrGoal.Goal:
                     _pointMat.color = Color.green;
+                    _collider.isTrigger = false;
+                    break;
+            }
+            switch (startGoalPointInfo.StartingDirection)
+            {
+                case StartingDirection.North:
+                    transform.rotation = Quaternion.Euler(0, 180, 0);
+                    break;
+                case StartingDirection.West:
+                    transform.rotation = Quaternion.Euler(0, 90, 0);
+                    break;
+                case StartingDirection.South:
+                    transform.rotation = Quaternion.Euler(0, 0, 0);
+                    break;
+                case StartingDirection.East:
+                    transform.rotation = Quaternion.Euler(0, -90, 0);
                     break;
             }
         }
@@ -37,6 +54,7 @@ namespace CarGame.Obstacles
             {
                 case StartOrGoal.Obstacle:
                     _pointMat.color = Color.red;
+                    _collider.isTrigger = false;
                     break;
                 case StartOrGoal.Start:
                     _pointMat.color = Color.blue;
@@ -44,6 +62,7 @@ namespace CarGame.Obstacles
                     break;
                 case StartOrGoal.Goal:
                     _pointMat.color = Color.green;
+                    _collider.isTrigger = false;
                     break;
             }
         }

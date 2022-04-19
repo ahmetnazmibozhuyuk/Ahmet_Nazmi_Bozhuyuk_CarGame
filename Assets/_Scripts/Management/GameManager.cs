@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace CarGame.Managers
@@ -12,8 +14,11 @@ namespace CarGame.Managers
         {
             get { return player; }
             set { player = value; }
+
         }
         [SerializeField] private Controller player;
+
+        public List<PosRot>[] _carRecords = new List<PosRot>[8];
 
         private LevelManager _levelManager;
 
@@ -22,6 +27,16 @@ namespace CarGame.Managers
             base.Awake();
             _levelManager = GetComponent<LevelManager>();
         }
+        //private IEnumerator RecordPosRot()
+        //{
+        //    if(currentState == GameState.GameStarted)
+        //    {
+        //        _carRecords[_levelManager.CurrentIteration].Add(new PosRot(Player.transform.position, Player.transform.rotation));
+        //        Debug.Log("ads");
+        //        yield return null;
+        //    }
+        //    yield break;
+        //}
         private void Start()
         {
             ChangeState(GameState.GameAwaitingStart);
@@ -59,7 +74,7 @@ namespace CarGame.Managers
         }
         private void GameStartedState()
         {
-
+            //StartCoroutine(RecordPosRot());
         }
         private void GameWonState()
         {
@@ -68,7 +83,7 @@ namespace CarGame.Managers
         }
         private void GameLostState()
         {
-
+            _levelManager.RestartIteration();
         }
         //HEP AYNI ARACI KONTROL ET (controller), KAÇ ARABA OLUŞACAKSA O KADARINI AKTİF OLMAZ ŞEKİLDE YEDEKTE TUT. HERKESİN SCRİPTİ OYUN BAŞLAMADAN HAZIR OLSUN.
     }

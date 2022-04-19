@@ -10,6 +10,8 @@ namespace CarGame
     [RequireComponent(typeof(Collider), typeof(Rigidbody))]
     public class Controller : MonoBehaviour
     {
+        public List<PosRot>[] _carRecords = new List<PosRot>[8];
+
         [SerializeField] private ControllersList controllersList;
 
         [Header("Movement Properties")]
@@ -42,7 +44,10 @@ namespace CarGame
             SetMovement();
 
         }
+        private void RecordCar()
+        {
 
+        }
         private void FixedUpdate()
         {
 
