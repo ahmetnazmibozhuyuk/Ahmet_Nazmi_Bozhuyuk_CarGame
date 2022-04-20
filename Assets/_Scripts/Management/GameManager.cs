@@ -18,31 +18,71 @@ namespace CarGame.Managers
         }
         [SerializeField] private Controller player;
 
-        public List<PosRot>[] _carRecords = new List<PosRot>[8];
+        [Tooltip("Lower this value is, smoother the animations of recorded cars will be. Too low values may cause issues.")]
+        [Range(0.01f,0.15f)]
+        [SerializeField] private float recordSmoothness;
+
+        private List<PosRot>[] _carRecords = new List<PosRot>[8];
 
         private LevelManager _levelManager;
+
+        [SerializeField] private GameObject[] recordedCar = new GameObject[7];
 
         protected override void Awake()
         {
             base.Awake();
             _levelManager = GetComponent<LevelManager>();
+            for(int i = 0; i < _carRecords.Length; i++)
+            {
+                _carRecords[i] = new();
+            }
         }
-        //private IEnumerator RecordPosRot()
-        //{
-        //    if(currentState == GameState.GameStarted)
-        //    {
-        //        _carRecords[_levelManager.CurrentIteration].Add(new PosRot(Player.transform.position, Player.transform.rotation));
-        //        Debug.Log("ads");
-        //        yield return null;
-        //    }
-        //    yield break;
-        //}
+
         private void Start()
         {
             ChangeState(GameState.GameAwaitingStart);
 
 
         }
+
+        private IEnumerator Co_RecordCar(int currentIteration)
+        {
+                _carRecords[currentIteration].Add(new PosRot(Player.transform.position, Player.transform.rotation));
+
+                if (currentState == GameState.GameStarted)
+                {
+                    yield return new WaitForSeconds(recordSmoothness);
+                    StartCoroutine(Co_RecordCar(currentIteration));
+                }
+                yield break;
+        }
+        private IEnumerator Co_ReplayCar(int carIndex, int i)
+        {
+
+            if (_carRecords[carIndex].Count == i)
+            {
+                recordedCar[carIndex].SetActive(false);
+                yield break;
+            }
+            //Debug.Log(carIndex + " is running");
+
+            recordedCar[carIndex].transform.SetPositionAndRotation(_carRecords[carIndex][i].currentPosition, _carRecords[carIndex][i].currentRotation);
+            i++;
+            if (currentState == GameState.GameStarted)
+            {
+                yield return new WaitForSeconds(recordSmoothness);
+                StartCoroutine(Co_ReplayCar(carIndex,i));
+            }
+            yield break;
+        }
+        private void RecordCar()
+        {
+
+        }
+        //private void ReplayCar(int carIndex)
+        //{
+        //    StartCoroutine(Co_ReplayCar(carIndex));
+        //}
 
         public void ChangeState(GameState newState)
         {
@@ -75,6 +115,14 @@ namespace CarGame.Managers
         private void GameStartedState()
         {
             //StartCoroutine(RecordPosRot());
+            StartCoroutine(Co_RecordCar(_levelManager.CurrentIteration));
+            if (_levelManager.CurrentIteration <= 0) return;
+            for(int i = 0; i < _levelManager.CurrentIteration; i++)
+            {
+                recordedCar[i].SetActive(true);
+                StartCoroutine(Co_ReplayCar(i,0));
+            }
+
         }
         private void GameWonState()
         {
@@ -83,6 +131,7 @@ namespace CarGame.Managers
         }
         private void GameLostState()
         {
+            _carRecords[_levelManager.CurrentIteration].Clear();
             _levelManager.RestartIteration();
         }
         //HEP AYNI ARACI KONTROL ET (controller), KAÇ ARABA OLUŞACAKSA O KADARINI AKTİF OLMAZ ŞEKİLDE YEDEKTE TUT. HERKESİN SCRİPTİ OYUN BAŞLAMADAN HAZIR OLSUN.

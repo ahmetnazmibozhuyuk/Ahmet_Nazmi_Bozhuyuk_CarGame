@@ -21,10 +21,6 @@ namespace CarGame.Managers
 
 
 
-
-        // burada queue oluşsun her seferinde diğer tüm araçlara gitsin diğer araçlarda uzunluk sıfırsa disable bu queue'yu doldurmayı dene değilse enable olup 
-        //bu queue'yu doldurup yola çıksın
-
         private void Awake()
         {
 
@@ -67,7 +63,6 @@ namespace CarGame.Managers
         }
         public void NextIteration()
         {
-            Debug.Log("next iteration");
             CurrentIteration++;
             SetStartAndExit(enterExitPoints[CurrentIteration].EnterIndex, enterExitPoints[CurrentIteration].ExitIndex);
             GameManager.instance.ChangeState(GameState.GameAwaitingStart);

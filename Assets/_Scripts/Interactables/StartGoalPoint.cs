@@ -71,14 +71,11 @@ namespace CarGame.Obstacles
             switch (startGoalPointInfo.StartOrGoal)
             {
                 case StartOrGoal.Obstacle:
-                    Debug.Log("HIT THE WRONG POINT");
                     GameManager.instance.ChangeState(GameState.GameLost);
                     break;
                 case StartOrGoal.Start:
-                    Debug.Log("Player is at the start point.");
                     break;
                 case StartOrGoal.Goal:
-                    Debug.Log("HIT THE GOAL POINT");
                     GameManager.instance.ChangeState(GameState.GameWon);
                     break;
             }

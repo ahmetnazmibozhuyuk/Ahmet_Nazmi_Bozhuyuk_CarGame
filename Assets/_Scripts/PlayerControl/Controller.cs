@@ -10,7 +10,7 @@ namespace CarGame
     [RequireComponent(typeof(Collider), typeof(Rigidbody))]
     public class Controller : MonoBehaviour
     {
-        public List<PosRot>[] _carRecords = new List<PosRot>[8];
+
 
         [SerializeField] private ControllersList controllersList;
 
@@ -44,10 +44,7 @@ namespace CarGame
             SetMovement();
 
         }
-        private void RecordCar()
-        {
 
-        }
         private void FixedUpdate()
         {
 
@@ -61,7 +58,7 @@ namespace CarGame
         {
             if (collision.gameObject.GetComponent<ICrash>() == null)
             {
-                Debug.LogError("Crashed object has not implemented ICrash!");
+                Debug.LogError("Crashed object "+collision.gameObject+ " has not implemented ICrash!");
                 return;
             }
             collision.gameObject.GetComponent<ICrash>().Crash();
