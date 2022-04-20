@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace CarGame.Managers
 {
-    [RequireComponent(typeof(LevelManager))]
+    [RequireComponent(typeof(LevelManager),typeof(UIManager))]
     public class GameManager : Singleton<GameManager>
     {
         public GameState currentState { get; private set; }
@@ -25,6 +25,7 @@ namespace CarGame.Managers
         private List<PosRot>[] _carRecords = new List<PosRot>[8];
 
         private LevelManager _levelManager;
+        private UIManager _uiManager;
 
         [SerializeField] private GameObject[] recordedCar = new GameObject[7];
 
@@ -32,6 +33,7 @@ namespace CarGame.Managers
         {
             base.Awake();
             _levelManager = GetComponent<LevelManager>();
+            _uiManager = GetComponent<UIManager>();
             for(int i = 0; i < _carRecords.Length; i++)
             {
                 _carRecords[i] = new();
@@ -41,7 +43,7 @@ namespace CarGame.Managers
         private void Start()
         {
             ChangeState(GameState.GameAwaitingStart);
-
+            _uiManager.SetText("Current Iteration: " + _levelManager.CurrentIteration, "Current Level: " + _levelManager.CurrentLevel);
 
         }
 
@@ -128,11 +130,20 @@ namespace CarGame.Managers
         {
             // if son araçsa bir sonraki bölüme geç yoksa sonraki arabaya geç
             _levelManager.LevelWon();
+            _uiManager.SetText("Current Iteration: " + _levelManager.CurrentIteration, "Current Level: " + _levelManager.CurrentLevel);
         }
         private void GameLostState()
         {
             _carRecords[_levelManager.CurrentIteration].Clear();
             _levelManager.RestartIteration();
+        }
+public void ResetAllRecords()
+        {
+            Debug.Log("reset all iterations");
+            for(int i = 0; i < _carRecords.Length; i++)
+            {
+                _carRecords[i].Clear();
+            }
         }
         //HEP AYNI ARACI KONTROL ET (controller), KAÇ ARABA OLUŞACAKSA O KADARINI AKTİF OLMAZ ŞEKİLDE YEDEKTE TUT. HERKESİN SCRİPTİ OYUN BAŞLAMADAN HAZIR OLSUN.
     }

@@ -2918,6 +2918,7 @@ GameObject:
   - component: {fileID: 1762944746}
   - component: {fileID: 1762944745}
   - component: {fileID: 1762944747}
+  - component: {fileID: 1762944748}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -2974,7 +2975,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 326639299b701e24b86344c8499bb487, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxIterationIndex: 8
+  maxIterationIndex: 2
   levelPrefabs:
   - {fileID: 1428035590}
   startGoalPoints: []
@@ -2990,12 +2991,26 @@ MonoBehaviour:
     ExitIndex: 2
   - EnterIndex: 3
     ExitIndex: 14
-  - EnterIndex: 0
-    ExitIndex: 0
-  - EnterIndex: 0
-    ExitIndex: 0
-  - EnterIndex: 0
-    ExitIndex: 0
+  - EnterIndex: 4
+    ExitIndex: 8
+  - EnterIndex: 7
+    ExitIndex: 9
+  - EnterIndex: 11
+    ExitIndex: 12
+--- !u!114 &1762944748
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1762944744}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: adfe28b69631da6478a4e9175372728a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentIterationText: {fileID: 1464141180}
+  currentLevelText: {fileID: 539660695}
 --- !u!1 &1842605352
 GameObject:
   m_ObjectHideFlags: 0

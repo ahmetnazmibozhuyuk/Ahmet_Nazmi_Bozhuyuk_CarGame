@@ -52,7 +52,8 @@ namespace CarGame.Managers
 
         public void LevelWon()
         {
-            if (CurrentIteration > maxIterationIndex)
+            Debug.Log("level won at " + CurrentIteration + " iteration");
+            if (CurrentIteration > maxIterationIndex-1)
             {
                 NextLevel();
             }
@@ -72,6 +73,9 @@ namespace CarGame.Managers
         {
             Debug.Log("next level");
             //tüm queueleri temizle, bir sonraki bölümü aç, oyunu awaiting starta getir
+            GameManager.instance.ResetAllRecords();
+            CurrentIteration = 0;
+            GameManager.instance.ChangeState(GameState.GameAwaitingStart);
         }
         public void RestartIteration()
         {
@@ -83,10 +87,6 @@ namespace CarGame.Managers
         {
             Debug.Log("restart level");
             //tüm queueleri temizle, oyunu awaiting starta getir.
-        }
-        private void PrepareForNextIteration()
-        {
-
         }
     }
     [System.Serializable]
