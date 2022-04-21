@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace CarGame.Managers
 {
-    [RequireComponent(typeof(LevelManager),typeof(UIManager))]
+    [RequireComponent(typeof(LevelManager), typeof(UIManager))]
     public class GameManager : Singleton<GameManager>
     {
         public GameState currentState { get; private set; }
@@ -18,8 +18,10 @@ namespace CarGame.Managers
         }
         [SerializeField] private Controller player;
 
+        [SerializeField] private int maxIterationIndex = 8;
+
         [Tooltip("Lower this value is, smoother the animations of recorded cars will be. Too low values may cause issues.")]
-        [Range(0.01f,0.15f)]
+        [Range(0.01f, 0.15f)]
         [SerializeField] private float recordSmoothness;
 
         private List<PosRot>[] _carRecords = new List<PosRot>[8];
@@ -34,7 +36,7 @@ namespace CarGame.Managers
             base.Awake();
             _levelManager = GetComponent<LevelManager>();
             _uiManager = GetComponent<UIManager>();
-            for(int i = 0; i < _carRecords.Length; i++)
+            for (int i = 0; i < _carRecords.Length; i++)
             {
                 _carRecords[i] = new();
             }
@@ -42,21 +44,21 @@ namespace CarGame.Managers
 
         private void Start()
         {
+            _levelManager.StartLevel(_levelManager.CurrentLevel);
             ChangeState(GameState.GameAwaitingStart);
             _uiManager.SetText("Current Iteration: " + _levelManager.CurrentIteration, "Current Level: " + _levelManager.CurrentLevel);
-
         }
 
         private IEnumerator Co_RecordCar(int currentIteration)
         {
-                _carRecords[currentIteration].Add(new PosRot(Player.transform.position, Player.transform.rotation));
+            _carRecords[currentIteration].Add(new PosRot(Player.transform.position, Player.transform.rotation));
 
-                if (currentState == GameState.GameStarted)
-                {
-                    yield return new WaitForSeconds(recordSmoothness);
-                    StartCoroutine(Co_RecordCar(currentIteration));
-                }
-                yield break;
+            if (currentState == GameState.GameStarted)
+            {
+                yield return new WaitForSeconds(recordSmoothness);
+                StartCoroutine(Co_RecordCar(currentIteration));
+            }
+            yield break;
         }
         private IEnumerator Co_ReplayCar(int carIndex, int i)
         {
@@ -66,26 +68,15 @@ namespace CarGame.Managers
                 recordedCar[carIndex].SetActive(false);
                 yield break;
             }
-            //Debug.Log(carIndex + " is running");
-
             recordedCar[carIndex].transform.SetPositionAndRotation(_carRecords[carIndex][i].currentPosition, _carRecords[carIndex][i].currentRotation);
             i++;
             if (currentState == GameState.GameStarted)
             {
                 yield return new WaitForSeconds(recordSmoothness);
-                StartCoroutine(Co_ReplayCar(carIndex,i));
+                StartCoroutine(Co_ReplayCar(carIndex, i));
             }
             yield break;
         }
-        private void RecordCar()
-        {
-
-        }
-        //private void ReplayCar(int carIndex)
-        //{
-        //    StartCoroutine(Co_ReplayCar(carIndex));
-        //}
-
         public void ChangeState(GameState newState)
         {
             if (currentState == newState) return;
@@ -116,20 +107,33 @@ namespace CarGame.Managers
         }
         private void GameStartedState()
         {
-            //StartCoroutine(RecordPosRot());
             StartCoroutine(Co_RecordCar(_levelManager.CurrentIteration));
             if (_levelManager.CurrentIteration <= 0) return;
-            for(int i = 0; i < _levelManager.CurrentIteration; i++)
+            for (int i = 0; i < _levelManager.CurrentIteration; i++)
             {
                 recordedCar[i].SetActive(true);
-                StartCoroutine(Co_ReplayCar(i,0));
+                StartCoroutine(Co_ReplayCar(i, 0));
             }
 
         }
         private void GameWonState()
         {
-            // if son araçsa bir sonraki bölüme geç yoksa sonraki arabaya geç
-            _levelManager.LevelWon();
+            if (_levelManager.CurrentIteration >= maxIterationIndex)
+            {
+                ResetAllRecords();
+                _levelManager.NextLevel();
+                ChangeState(GameState.GameAwaitingStart);
+                for(int i = 0; i < recordedCar.Length; i++)
+                {
+                    recordedCar[i].SetActive(false);
+                }
+
+            }
+            else
+            {
+                _levelManager.NextIteration();
+            }
+
             _uiManager.SetText("Current Iteration: " + _levelManager.CurrentIteration, "Current Level: " + _levelManager.CurrentLevel);
         }
         private void GameLostState()
@@ -137,15 +141,14 @@ namespace CarGame.Managers
             _carRecords[_levelManager.CurrentIteration].Clear();
             _levelManager.RestartIteration();
         }
-public void ResetAllRecords()
+        public void ResetAllRecords()
         {
             Debug.Log("reset all iterations");
-            for(int i = 0; i < _carRecords.Length; i++)
+            for (int i = 0; i < _carRecords.Length; i++)
             {
                 _carRecords[i].Clear();
             }
         }
-        //HEP AYNI ARACI KONTROL ET (controller), KAÇ ARABA OLUŞACAKSA O KADARINI AKTİF OLMAZ ŞEKİLDE YEDEKTE TUT. HERKESİN SCRİPTİ OYUN BAŞLAMADAN HAZIR OLSUN.
     }
     public enum GameState
     {

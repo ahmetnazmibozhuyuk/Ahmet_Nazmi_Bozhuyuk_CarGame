@@ -15,6 +15,5 @@ namespace CarGame.Managers
             currentIterationText.SetText(currIterationText);
             currentLevelText.SetText(currLevelText);
         }
-
     }
 }

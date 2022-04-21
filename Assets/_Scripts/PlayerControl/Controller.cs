@@ -41,13 +41,13 @@ namespace CarGame
         private void Update()
         {
             AssignInput();
-            SetMovement();
+
 
         }
 
         private void FixedUpdate()
         {
-
+            SetMovement();
         }
         public void InitializePlayerForNextIteration(Vector3 position, Quaternion rotation)
         {
@@ -70,14 +70,13 @@ namespace CarGame
         {
             if (GameManager.instance.currentState != GameState.GameStarted)
                 return;
-
             _rigidbody.MoveRotation(Quaternion.Euler(0, _rigidbody.transform.rotation.eulerAngles.y + _rotateValue, 0));
         }
         private void SetMovement()
         {
             if (GameManager.instance.currentState != GameState.GameStarted) return;
             _lerpVal += Time.deltaTime * forwardAcceleration;
-            _speedValue = Mathf.Lerp(0, maxForwardSpeed * 0.05f, _lerpVal);
+            _speedValue = Mathf.Lerp(0, maxForwardSpeed * 0.5f, _lerpVal);
             _rigidbody.MovePosition(_rigidbody.position + transform.forward * _speedValue);
         }
         private void LeftInputActive()
