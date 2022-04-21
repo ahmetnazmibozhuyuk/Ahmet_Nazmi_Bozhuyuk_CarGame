@@ -1,0 +1,12 @@
+To add a new level; simply duplicate a level prefab, assign the 
+enter-exit point of each iteration from the class in the prefab's
+first child and drag the created prefab into the LevelPrefabs list
+in the LevelManager.
+
+I used a simple ICrash interface for any types of collisions
+(like end goal, obstacles or pre recorded cars) so that I can 
+expand on interactables easier.
+
+I was initially planning on using a ScriptableObject to hold level
+data and prefab but eventually decided to hold it in LevelStartGoalPoints class.
+With this level prefab system, I was able to create new levels easily.
