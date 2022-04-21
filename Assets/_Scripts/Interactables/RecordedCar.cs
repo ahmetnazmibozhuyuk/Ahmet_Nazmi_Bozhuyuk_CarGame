@@ -7,7 +7,6 @@ namespace CarGame.Obstacles
     {
         public void Crash()
         {
-            Debug.Log("HIT A RECORDED CAR!");
             GameManager.instance.ChangeState(GameState.GameLost);
         }
     }

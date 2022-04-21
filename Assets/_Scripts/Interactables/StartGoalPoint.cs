@@ -89,6 +89,14 @@ namespace CarGame.Obstacles
         public StartOrGoal StartOrGoal;
         public StartingDirection StartingDirection;
     }
+
     public enum StartOrGoal { Obstacle = 0, Start = 1, Goal = 2}
     public enum StartingDirection { North = 0, West = 1, South = 2, East = 3 }
+}
+namespace CarGame
+{
+    public interface ICrash
+    {
+        public void Crash();
+    }
 }

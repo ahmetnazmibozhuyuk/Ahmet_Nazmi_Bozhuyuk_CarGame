@@ -8,7 +8,6 @@ namespace CarGame.Obstacles
         public void Crash()
         {
             // Wall hit sfx-particle etc
-            Debug.Log("HIT THE OBSTACLE!");
             GameManager.instance.ChangeState(GameState.GameLost);
         }
     }

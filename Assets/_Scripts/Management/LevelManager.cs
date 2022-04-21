@@ -48,14 +48,21 @@ namespace CarGame.Managers
         }
         public void NextLevel()
         {
-            CurrentIteration = 0;
-            CurrentLevel++;
-            _startGoalPoints.Clear();
-            StartLevel(CurrentLevel);
+            if (CurrentLevel < levelPrefabs.Count-1)
+            {
+                CurrentIteration = 0;
+                CurrentLevel++;
+                _startGoalPoints.Clear();
+                StartLevel(CurrentLevel);
+            }
+            else
+            {
+                Debug.Log("YOU WON");
+            }
+
         }
         public void RestartIteration()
         {
-            Debug.Log("restart iteration");
             SetStartAndExit(_startGoalPointClass.enterExitPoints[CurrentIteration].EnterIndex,
                 _startGoalPointClass.enterExitPoints[CurrentIteration].ExitIndex);
             GameManager.instance.ChangeState(GameState.GameAwaitingStart);

@@ -8,7 +8,7 @@ namespace CarGame.Managers
     [RequireComponent(typeof(LevelManager), typeof(UIManager))]
     public class GameManager : Singleton<GameManager>
     {
-        public GameState currentState { get; private set; }
+        public GameState CurrentState { get; private set; }
 
         public Controller Player
         {
@@ -18,7 +18,7 @@ namespace CarGame.Managers
         }
         [SerializeField] private Controller player;
 
-        [SerializeField] private int maxIterationIndex = 8;
+        private const int maxIterationIndex = 7;
 
         [Tooltip("Lower this value is, smoother the animations of recorded cars will be. Too low values may cause issues.")]
         [Range(0.01f, 0.15f)]
@@ -51,37 +51,33 @@ namespace CarGame.Managers
 
         private IEnumerator Co_RecordCar(int currentIteration)
         {
-            _carRecords[currentIteration].Add(new PosRot(Player.transform.position, Player.transform.rotation));
-
-            if (currentState == GameState.GameStarted)
+            while (CurrentState == GameState.GameStarted)
             {
+                _carRecords[currentIteration].Add(new PosRot(Player.transform.position, Player.transform.rotation));
                 yield return new WaitForSeconds(recordSmoothness);
-                StartCoroutine(Co_RecordCar(currentIteration));
             }
             yield break;
         }
         private IEnumerator Co_ReplayCar(int carIndex, int i)
         {
-
-            if (_carRecords[carIndex].Count == i)
+            while (CurrentState == GameState.GameStarted)
             {
-                recordedCar[carIndex].SetActive(false);
-                yield break;
-            }
-            recordedCar[carIndex].transform.SetPositionAndRotation(_carRecords[carIndex][i].currentPosition, _carRecords[carIndex][i].currentRotation);
-            i++;
-            if (currentState == GameState.GameStarted)
-            {
+                if (_carRecords[carIndex].Count == i)
+                {
+                    recordedCar[carIndex].SetActive(false);
+                    yield break;
+                }
+                recordedCar[carIndex].transform.SetPositionAndRotation(_carRecords[carIndex][i].currentPosition, _carRecords[carIndex][i].currentRotation);
+                i++;
                 yield return new WaitForSeconds(recordSmoothness);
-                StartCoroutine(Co_ReplayCar(carIndex, i));
             }
             yield break;
         }
         public void ChangeState(GameState newState)
         {
-            if (currentState == newState) return;
+            if (CurrentState == newState) return;
 
-            currentState = newState;
+            CurrentState = newState;
             switch (newState)
             {
                 case GameState.GameAwaitingStart:
@@ -100,10 +96,9 @@ namespace CarGame.Managers
                     throw new ArgumentException("Invalid game state selection.");
             }
         }
-
         private void GameAwaitingStartState()
         {
-
+            //Method for pre game.
         }
         private void GameStartedState()
         {
@@ -114,7 +109,6 @@ namespace CarGame.Managers
                 recordedCar[i].SetActive(true);
                 StartCoroutine(Co_ReplayCar(i, 0));
             }
-
         }
         private void GameWonState()
         {
@@ -127,13 +121,11 @@ namespace CarGame.Managers
                 {
                     recordedCar[i].SetActive(false);
                 }
-
             }
             else
             {
                 _levelManager.NextIteration();
             }
-
             _uiManager.SetText("Current Iteration: " + _levelManager.CurrentIteration, "Current Level: " + _levelManager.CurrentLevel);
         }
         private void GameLostState()
@@ -143,7 +135,6 @@ namespace CarGame.Managers
         }
         public void ResetAllRecords()
         {
-            Debug.Log("reset all iterations");
             for (int i = 0; i < _carRecords.Length; i++)
             {
                 _carRecords[i].Clear();
@@ -157,5 +148,19 @@ namespace CarGame.Managers
         GameStarted = 2,
         GameWon = 4,
         GameLost = 5,
+    }
+}
+namespace CarGame
+{
+    [Serializable]
+    public struct PosRot
+    {
+        public Vector3 currentPosition;
+        public Quaternion currentRotation;
+        public PosRot(Vector3 currPos, Quaternion currRot)
+        {
+            currentPosition = currPos;
+            currentRotation = currRot;
+        }
     }
 }

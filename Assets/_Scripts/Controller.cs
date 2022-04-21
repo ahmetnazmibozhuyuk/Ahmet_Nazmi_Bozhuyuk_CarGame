@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using System;
 using UnityEngine;
 using CarGame.Managers;
@@ -10,8 +8,6 @@ namespace CarGame
     [RequireComponent(typeof(Collider), typeof(Rigidbody))]
     public class Controller : MonoBehaviour
     {
-
-
         [SerializeField] private ControllersList controllersList;
 
         [Header("Movement Properties")]
@@ -34,21 +30,20 @@ namespace CarGame
         {
             _rigidbody = GetComponent<Rigidbody>();
         }
-        private void Start()
-        {
-
-        }
         private void Update()
         {
             AssignInput();
-
-
         }
 
         private void FixedUpdate()
         {
             SetMovement();
         }
+        /// <summary>
+        /// Resets players acceleration and sets its position and rotation accordingly.
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="rotation"></param>
         public void InitializePlayerForNextIteration(Vector3 position, Quaternion rotation)
         {
             _lerpVal = 0;
@@ -68,26 +63,29 @@ namespace CarGame
         #region Input - Movement Handler
         private void SetRotation()
         {
-            if (GameManager.instance.currentState != GameState.GameStarted)
+            if (GameManager.instance.CurrentState != GameState.GameStarted)
                 return;
             _rigidbody.MoveRotation(Quaternion.Euler(0, _rigidbody.transform.rotation.eulerAngles.y + _rotateValue, 0));
         }
         private void SetMovement()
         {
-            if (GameManager.instance.currentState != GameState.GameStarted) return;
+            if (GameManager.instance.CurrentState != GameState.GameStarted) return;
             _lerpVal += Time.deltaTime * forwardAcceleration;
             _speedValue = Mathf.Lerp(0, maxForwardSpeed * 0.5f, _lerpVal);
             _rigidbody.MovePosition(_rigidbody.position + transform.forward * _speedValue);
         }
+        private void InitialInput()
+        {
+            if (GameManager.instance.CurrentState == GameState.GameAwaitingStart) GameManager.instance.ChangeState(GameState.GameStarted);
+        }
         private void LeftInputActive()
         {
-            if (GameManager.instance.currentState == GameState.GameAwaitingStart) GameManager.instance.ChangeState(GameState.GameStarted);
             _rotateValue = -maxSteer;
             SetRotation();
         }
         private void RightInputActive()
         {
-            if (GameManager.instance.currentState == GameState.GameAwaitingStart) GameManager.instance.ChangeState(GameState.GameStarted);
+
             _rotateValue = maxSteer;
             SetRotation();
         }
@@ -100,12 +98,16 @@ namespace CarGame
             if (Input.touchCount > 0)
             {
                 Touch touch = Input.GetTouch(0);
+                if(touch.phase == TouchPhase.Began) 
+                    if(GameManager.instance.CurrentState == GameState.GameAwaitingStart) 
+                        GameManager.instance.ChangeState(GameState.GameStarted);
                 if (touch.phase == TouchPhase.Ended)
                 {
                     DeactivateInput();
                     return;
                 }
-                else if (touch.phase == TouchPhase.Moved || touch.phase == TouchPhase.Stationary || touch.phase == TouchPhase.Began)
+
+                else if (touch.phase == TouchPhase.Moved || touch.phase == TouchPhase.Stationary)
                 {
                     if (touch.position.x < Screen.width / 2)
                     {
@@ -120,6 +122,9 @@ namespace CarGame
         }
         private void MouseInput()
         {
+            if(Input.GetMouseButtonDown(0))
+                if(GameManager.instance.CurrentState == GameState.GameAwaitingStart)
+                    GameManager.instance.ChangeState(GameState.GameStarted);
             if (Input.GetMouseButton(0))
             {
                 if (Input.mousePosition.x < Screen.width / 2)
