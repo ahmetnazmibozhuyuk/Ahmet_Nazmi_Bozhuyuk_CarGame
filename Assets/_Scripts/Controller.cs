@@ -141,12 +141,30 @@ namespace CarGame
                 DeactivateInput();
             }
         }
+        private void KeyboardInput()
+        {
+            if(Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D))
+            {
+                if (GameManager.instance.CurrentState == GameState.GameAwaitingStart)
+                    GameManager.instance.ChangeState(GameState.GameStarted);
+            }
+            if (Input.GetKey(KeyCode.A))
+            {
+                LeftInputActive();
+            }else if (Input.GetKey(KeyCode.D))
+            {
+                RightInputActive();
+            }
+        }
         private void AssignInput()
         {
             switch (controllersList)
             {
                 case ControllersList.MouseController:
                     MouseInput();
+                    break;
+                case ControllersList.KeyboardController:
+                    KeyboardInput();
                     break;
                 case ControllersList.TouchController:
                     TouchInput();
@@ -159,6 +177,6 @@ namespace CarGame
     }
     public enum ControllersList
     {
-        MouseController = 0, TouchController = 1
+        MouseController = 0,KeyboardController, TouchController = 2
     }
 }

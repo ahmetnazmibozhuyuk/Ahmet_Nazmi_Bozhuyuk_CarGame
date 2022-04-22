@@ -1062,7 +1062,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba39f2280ab8ff1468f236dcc555c142, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controllersList: 0
+  controllersList: 1
   maxForwardSpeed: 0.333
   forwardAcceleration: 1
   maxSteer: 5
