@@ -18,10 +18,10 @@ namespace CarGame.Managers
         }
         [SerializeField] private Controller player;
 
-        private const int maxIterationIndex = 7;
+        private const int maxIterationIndex = 7; 
 
         [Tooltip("Lower this value is, smoother the animations of recorded cars will be. Too low values may cause issues.")]
-        [Range(0.01f, 0.15f)]
+        [Range(0.005f, 0.08f)]
         [SerializeField] private float recordSmoothness;
 
         private List<PosRot>[] _carRecords = new List<PosRot>[8];
@@ -54,7 +54,7 @@ namespace CarGame.Managers
             while (CurrentState == GameState.GameStarted)
             {
                 _carRecords[currentIteration].Add(new PosRot(Player.transform.position, Player.transform.rotation));
-                yield return new WaitForSeconds(recordSmoothness);
+                yield return new WaitForSecondsRealtime(recordSmoothness); //WaitForSecondsRealtime instead of Waitforseconds is because movement is in FixedUpdate.
             }
             yield break;
         }
@@ -69,7 +69,7 @@ namespace CarGame.Managers
                 }
                 recordedCar[carIndex].transform.SetPositionAndRotation(_carRecords[carIndex][i].currentPosition, _carRecords[carIndex][i].currentRotation);
                 i++;
-                yield return new WaitForSeconds(recordSmoothness);
+                yield return new WaitForSecondsRealtime(recordSmoothness);
             }
             yield break;
         }
@@ -99,9 +99,11 @@ namespace CarGame.Managers
         private void GameAwaitingStartState()
         {
             //Method for pre game.
+            //_uiManager.GameStartText(true);
         }
         private void GameStartedState()
         {
+            _uiManager.GameStartText(false);
             StartCoroutine(Co_RecordCar(_levelManager.CurrentIteration));
             if (_levelManager.CurrentIteration <= 0) return;
             for (int i = 0; i < _levelManager.CurrentIteration; i++)

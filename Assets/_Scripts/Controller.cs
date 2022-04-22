@@ -8,8 +8,6 @@ namespace CarGame
     [RequireComponent(typeof(Collider), typeof(Rigidbody))]
     public class Controller : MonoBehaviour
     {
-        [SerializeField] private ControllersList controllersList;
-
         [Header("Movement Properties")]
         [Range(0.1f,1f)]
         [SerializeField] private float maxForwardSpeed;
@@ -158,25 +156,10 @@ namespace CarGame
         }
         private void AssignInput()
         {
-            switch (controllersList)
-            {
-                case ControllersList.MouseController:
-                    MouseInput();
-                    break;
-                case ControllersList.KeyboardController:
-                    KeyboardInput();
-                    break;
-                case ControllersList.TouchController:
-                    TouchInput();
-                    break;
-                default:
-                    throw new ArgumentException("Invalid controller selection.");
-            }
+            MouseInput();
+            KeyboardInput();
+            TouchInput();
         }
         #endregion
-    }
-    public enum ControllersList
-    {
-        MouseController = 0,KeyboardController, TouchController = 2
     }
 }
