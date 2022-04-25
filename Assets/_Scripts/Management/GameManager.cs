@@ -54,7 +54,7 @@ namespace CarGame.Managers
             while (CurrentState == GameState.GameStarted)
             {
                 _carRecords[currentIteration].Add(new PosRot(Player.transform.position, Player.transform.rotation));
-                yield return new WaitForSecondsRealtime(recordSmoothness); //WaitForSecondsRealtime instead of Waitforseconds is because movement is in FixedUpdate.
+                yield return new WaitForSecondsRealtime(recordSmoothness);
             }
             yield break;
         }
