@@ -17,10 +17,10 @@ namespace CarGame.Managers
         }
         [SerializeField] private Controller player;
 
-        private LevelManager _levelManager;
-        private UIManager _uiManager;
         [SerializeField] private Recorder recorder;
 
+        private LevelManager _levelManager;
+        private UIManager _uiManager;
 
         protected override void Awake()
         {
@@ -35,7 +35,6 @@ namespace CarGame.Managers
             ChangeState(GameState.GameAwaitingStart);
             _uiManager.SetText("Current Iteration: " + _levelManager.CurrentIteration, "Current Level: " + _levelManager.CurrentLevel);
         }
-
 
         public void ChangeState(GameState newState)
         {
@@ -92,14 +91,13 @@ namespace CarGame.Managers
             recorder.RestartCurrentIteration(_levelManager.CurrentIteration);
             _levelManager.RestartIteration();
         }
-
     }
     public enum GameState
     {
         GamePreStart = 0,
         GameAwaitingStart = 1,
         GameStarted = 2,
-        GameWon = 4,
-        GameLost = 5,
+        GameWon = 3,
+        GameLost = 4,
     }
 }

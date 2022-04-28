@@ -59,7 +59,6 @@ namespace CarGame.Managers
             {
                 Debug.Log("YOU WON");
             }
-
         }
         public void RestartIteration()
         {
