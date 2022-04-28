@@ -13,10 +13,10 @@ namespace CarGame.Record
         [Range(0.005f, 0.08f)]
         [SerializeField] private float recordSmoothness;
 
+        [SerializeField] private GameObject[] recordedCar = new GameObject[7];
+
         private List<PosRot>[] _carRecords = new List<PosRot>[8];
 
-
-        [SerializeField] private GameObject[] recordedCar = new GameObject[7];
         private void Awake()
         {
             for (int i = 0; i < _carRecords.Length; i++)
@@ -24,7 +24,18 @@ namespace CarGame.Record
                 _carRecords[i] = new();
             }
         }
-
+        public void StartRecording(int currentIteration)
+        {
+            StartCoroutine(Co_RecordCar(currentIteration));
+        }
+        public void StartReplaying(int iteration)
+        {
+            for (int i = 0; i < iteration; i++)
+            {
+                recordedCar[i].SetActive(true);
+                StartCoroutine(Co_ReplayCar(i, 0));
+            }
+        }
         private IEnumerator Co_RecordCar(int currentIteration)
         {
             while (GameManager.instance.CurrentState == GameState.GameStarted)
@@ -49,13 +60,6 @@ namespace CarGame.Record
             }
             yield break;
         }
-        public void ResetAllRecords()
-        {
-            for (int i = 0; i < _carRecords.Length; i++)
-            {
-                _carRecords[i].Clear();
-            }
-        }
         public void RestartCurrentIteration(int currentIteration)
         {
             _carRecords[currentIteration].Clear();
@@ -68,16 +72,11 @@ namespace CarGame.Record
                 recordedCar[i].SetActive(false);
             }
         }
-        public void StartRecording(int currentIteration)
+        public void ResetAllRecords()
         {
-            StartCoroutine(Co_RecordCar(currentIteration));
-        }
-        public void StartReplaying(int iteration)
-        {
-            for (int i = 0; i < iteration; i++)
+            for (int i = 0; i < _carRecords.Length; i++)
             {
-                recordedCar[i].SetActive(true);
-                StartCoroutine(Co_ReplayCar(i, 0));
+                _carRecords[i].Clear();
             }
         }
     }
