@@ -5,11 +5,9 @@ using CarGame.Managers;
 
 namespace CarGame.Record
 {
-    public class Recorder : MonoBehaviour
+    public class PosRotRecorder : Recorder
     {
-        public const int maxIterationIndex = 7;
-
-        [Tooltip("Lower this value is, smoother the animations of recorded cars will be. Too low values may cause issues.")]
+        [Tooltip("Lower this value is, smoother the animations of recorded cars will be.")]
         [Range(0.005f, 0.08f)]
         [SerializeField] private float recordSmoothness;
 
@@ -24,11 +22,11 @@ namespace CarGame.Record
                 _carRecords[i] = new();
             }
         }
-        public void StartRecording(int currentIteration)
+        public override void StartRecording(int currentIteration)
         {
             StartCoroutine(Co_RecordCar(currentIteration));
         }
-        public void StartReplaying(int iteration)
+        public override void StartReplaying(int iteration)
         {
             for (int i = 0; i < iteration; i++)
             {
@@ -60,11 +58,11 @@ namespace CarGame.Record
             }
             yield break;
         }
-        public void RestartCurrentIteration(int currentIteration)
+        public override void RestartCurrentIteration(int currentIteration)
         {
             _carRecords[currentIteration].Clear();
         }
-        public void NextLevel()
+        public override void NextLevel()
         {
             ResetAllRecords();
             for (int i = 0; i < recordedCar.Length; i++)
@@ -72,26 +70,12 @@ namespace CarGame.Record
                 recordedCar[i].SetActive(false);
             }
         }
-        public void ResetAllRecords()
+        public override void ResetAllRecords()
         {
             for (int i = 0; i < _carRecords.Length; i++)
             {
                 _carRecords[i].Clear();
             }
-        }
-    }
-}
-namespace CarGame
-{
-    [System.Serializable]
-    public struct PosRot
-    {
-        public Vector3 currentPosition;
-        public Quaternion currentRotation;
-        public PosRot(Vector3 currPos, Quaternion currRot)
-        {
-            currentPosition = currPos;
-            currentRotation = currRot;
         }
     }
 }
