@@ -1865,7 +1865,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 1069858399}
-  recorder: {fileID: 516059956}
+  recorderObj: {fileID: 516059954}
 --- !u!4 &1762944746
 Transform:
   m_ObjectHideFlags: 0

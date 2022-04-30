@@ -1,6 +1,6 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using CarGame.Record;
+using CarGame.Control;
 
 namespace CarGame.Managers
 {
@@ -17,7 +17,9 @@ namespace CarGame.Managers
         }
         [SerializeField] private Controller player;
 
-        [SerializeField] private Recorder recorder;
+        [SerializeField] private GameObject recorderObj;
+
+        private IRecord _recorder;
 
         private LevelManager _levelManager;
         private UIManager _uiManager;
@@ -27,6 +29,8 @@ namespace CarGame.Managers
             base.Awake();
             _levelManager = GetComponent<LevelManager>();
             _uiManager = GetComponent<UIManager>();
+            _recorder = recorderObj.GetComponent<IRecord>();
+            
         }
 
         private void Start()
@@ -56,7 +60,7 @@ namespace CarGame.Managers
                     GameLostState();
                     break;
                 default:
-                    throw new ArgumentException("Invalid game state selection.");
+                    throw new System.ArgumentException("Invalid game state selection.");
             }
         }
         private void GameAwaitingStartState()
@@ -67,15 +71,15 @@ namespace CarGame.Managers
         private void GameStartedState()
         {
             _uiManager.GameStartText(false);
-            recorder.StartRecording(_levelManager.CurrentIteration);
+            _recorder.StartRecording(_levelManager.CurrentIteration);
             if (_levelManager.CurrentIteration <= 0) return;
-            recorder.StartReplaying(_levelManager.CurrentIteration);
+            _recorder.StartReplaying(_levelManager.CurrentIteration);
         }
         private void GameWonState()
         {
-            if (_levelManager.CurrentIteration >= Recorder.maxIterationIndex)
+            if (_levelManager.CurrentIteration >= IRecord.maxIterationIndex)
             {
-                recorder.NextLevel();
+                _recorder.NextLevel();
                 _levelManager.NextLevel();
                 ChangeState(GameState.GameAwaitingStart);
 
@@ -88,7 +92,7 @@ namespace CarGame.Managers
         }
         private void GameLostState()
         {
-            recorder.RestartCurrentIteration(_levelManager.CurrentIteration);
+            _recorder.RestartCurrentIteration(_levelManager.CurrentIteration);
             _levelManager.RestartIteration();
         }
     }

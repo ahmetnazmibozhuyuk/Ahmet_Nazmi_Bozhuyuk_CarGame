@@ -1,12 +1,13 @@
-using System;
+﻿using System;
 using UnityEngine;
 using CarGame.Managers;
 
 
-namespace CarGame
+namespace CarGame.Control
 {
     [RequireComponent(typeof(Collider), typeof(Rigidbody))]
-    public class Controller : MonoBehaviour
+
+    public class Controller : InputAbstract
     {
         [Header("Movement Properties")]
         [Range(0.1f,1f)]
@@ -28,8 +29,9 @@ namespace CarGame
         {
             _rigidbody = GetComponent<Rigidbody>();
         }
-        private void Update()
+        protected override void Update()
         {
+            base.Update();
             AssignInput();
         }
 
@@ -75,7 +77,9 @@ namespace CarGame
         private void InitialInput()
         {
             if (GameManager.instance.CurrentState == GameState.GameAwaitingStart) GameManager.instance.ChangeState(GameState.GameStarted);
+            Debug.Log("input initialized");
         }
+
         private void LeftInputActive()
         {
             _rotateValue = -maxSteer;
@@ -91,74 +95,35 @@ namespace CarGame
         {
             _rotateValue = 0;
         }
-        private void TouchInput()
-        {
-            if (Input.touchCount > 0)
-            {
-                Touch touch = Input.GetTouch(0);
-                if(touch.phase == TouchPhase.Began) 
-                    if(GameManager.instance.CurrentState == GameState.GameAwaitingStart) 
-                        GameManager.instance.ChangeState(GameState.GameStarted);
-                if (touch.phase == TouchPhase.Ended)
-                {
-                    DeactivateInput();
-                    return;
-                }
-
-                else if (touch.phase == TouchPhase.Moved || touch.phase == TouchPhase.Stationary)
-                {
-                    if (touch.position.x < Screen.width / 2)
-                    {
-                        LeftInputActive();
-                    }
-                    else if (touch.position.x > Screen.width / 2)
-                    {
-                        RightInputActive();
-                    }
-                }
-            }
-        }
-        private void MouseInput()
-        {
-            if(Input.GetMouseButtonDown(0))
-                if(GameManager.instance.CurrentState == GameState.GameAwaitingStart)
-                    GameManager.instance.ChangeState(GameState.GameStarted);
-            if (Input.GetMouseButton(0))
-            {
-                if (Input.mousePosition.x < Screen.width / 2)
-                {
-                    LeftInputActive();
-                }
-                else if (Input.mousePosition.x > Screen.width / 2)
-                {
-                    RightInputActive();
-                }
-            }
-            if (Input.GetMouseButtonUp(0))
-            {
-                DeactivateInput();
-            }
-        }
-        private void KeyboardInput()
-        {
-            if(Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D))
-            {
-                if (GameManager.instance.CurrentState == GameState.GameAwaitingStart)
-                    GameManager.instance.ChangeState(GameState.GameStarted);
-            }
-            if (Input.GetKey(KeyCode.A))
-            {
-                LeftInputActive();
-            }else if (Input.GetKey(KeyCode.D))
-            {
-                RightInputActive();
-            }
-        }
         private void AssignInput()
         {
-            MouseInput();
-            KeyboardInput();
-            TouchInput();
+            switch (leftInput)
+            {
+
+                case InputState.InputDown:
+                    InitialInput();
+
+                    break;
+                case InputState.InputActive:
+                    LeftInputActive();
+                    Debug.Log("initial input switch");
+                    break;
+                case InputState.InputUp:
+                    DeactivateInput();
+                    break;
+            }
+            switch (rightInput)
+            {
+                case InputState.InputDown:
+                    InitialInput();
+                    break;
+                case InputState.InputActive:
+                   RightInputActive();
+                    break;
+                case InputState.InputUp:
+                    DeactivateInput();
+                    break;
+            }
         }
         #endregion
     }

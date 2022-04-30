@@ -5,7 +5,7 @@ using CarGame.Managers;
 
 namespace CarGame.Record
 {
-    public class PosRotRecorder : Recorder
+    public class PosRotRecorder : MonoBehaviour, IRecord
     {
         [Tooltip("Lower this value is, smoother the animations of recorded cars will be.")]
         [Range(0.005f, 0.08f)]
@@ -22,11 +22,11 @@ namespace CarGame.Record
                 _carRecords[i] = new();
             }
         }
-        public override void StartRecording(int currentIteration)
+        public void StartRecording(int currentIteration)
         {
             StartCoroutine(Co_RecordCar(currentIteration));
         }
-        public override void StartReplaying(int iteration)
+        public void StartReplaying(int iteration)
         {
             for (int i = 0; i < iteration; i++)
             {
@@ -58,11 +58,11 @@ namespace CarGame.Record
             }
             yield break;
         }
-        public override void RestartCurrentIteration(int currentIteration)
+        public void RestartCurrentIteration(int currentIteration)
         {
             _carRecords[currentIteration].Clear();
         }
-        public override void NextLevel()
+        public void NextLevel()
         {
             ResetAllRecords();
             for (int i = 0; i < recordedCar.Length; i++)
@@ -70,7 +70,7 @@ namespace CarGame.Record
                 recordedCar[i].SetActive(false);
             }
         }
-        public override void ResetAllRecords()
+        public void ResetAllRecords()
         {
             for (int i = 0; i < _carRecords.Length; i++)
             {

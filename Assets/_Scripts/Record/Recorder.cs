@@ -1,7 +1,7 @@
 using UnityEngine;
 namespace CarGame.Record
 {
-    public abstract class Recorder : MonoBehaviour
+    public interface IRecord
     {
         public const int maxIterationIndex = 7;
         public abstract void StartRecording(int currentIteration);
@@ -23,6 +23,20 @@ namespace CarGame
             currentPosition = currPos;
             currentRotation = currRot;
         }
+    }
+    public struct InputInfo
+    {
+        public InputState LeftInput;
+        public InputState RightInput;
+        public InputInfo(InputState leftInput, InputState rightInput)
+        {
+            LeftInput = leftInput;
+            RightInput = rightInput;
+        }
+    }
+    public enum InputState
+    {
+        InputUp = 0, InputDown = 1, InputActive = 2
     }
 }
 
