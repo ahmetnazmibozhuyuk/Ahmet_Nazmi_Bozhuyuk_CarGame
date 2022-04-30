@@ -24,6 +24,7 @@ namespace CarGame
             currentRotation = currRot;
         }
     }
+    [System.Serializable]
     public struct InputInfo
     {
         public InputState LeftInput;

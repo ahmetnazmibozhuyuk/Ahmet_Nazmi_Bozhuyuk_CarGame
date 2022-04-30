@@ -1,16 +1,20 @@
-﻿using System;
+using System;
 using UnityEngine;
 using CarGame.Managers;
 
 
 namespace CarGame.Control
 {
+
+    //@todo: position and collisions aren't assigned properly.
+
+
     [RequireComponent(typeof(Collider), typeof(Rigidbody))]
 
-    public class Controller : InputAbstract
+    public class InputDrivenCar : InputAbstract,ICrash
     {
         [Header("Movement Properties")]
-        [Range(0.1f,1f)]
+        [Range(0.1f, 1f)]
         [SerializeField] private float maxForwardSpeed;
         [Tooltip("Determines how fast the vehicle will accelerate upon start.")]
         [SerializeField] private float forwardAcceleration;
@@ -29,11 +33,6 @@ namespace CarGame.Control
         {
             _rigidbody = GetComponent<Rigidbody>();
         }
-        protected override void Update()
-        {
-            base.Update();
-            AssignInput();
-        }
 
         private void FixedUpdate()
         {
@@ -44,21 +43,11 @@ namespace CarGame.Control
         /// </summary>
         /// <param name="position"></param>
         /// <param name="rotation"></param>
-        public void InitializePlayerForNextIteration(Vector3 position, Quaternion rotation)
+        public void InitializeCarForNextIteration(Vector3 position, Quaternion rotation)
         {
             _lerpVal = 0;
             transform.SetPositionAndRotation(position, rotation);
         }
-        private void OnCollisionEnter(Collision collision)
-        {
-            if (collision.gameObject.GetComponent<ICrash>() == null)
-            {
-                Debug.LogError("Crashed object "+collision.gameObject+ " has not implemented ICrash!");
-                return;
-            }
-            collision.gameObject.GetComponent<ICrash>().Crash();
-        }
-
 
         #region Input - Movement Handler
         private void SetRotation()
@@ -77,6 +66,7 @@ namespace CarGame.Control
         private void InitialInput()
         {
             if (GameManager.instance.CurrentState == GameState.GameAwaitingStart) GameManager.instance.ChangeState(GameState.GameStarted);
+            Debug.Log("input initialized");
         }
 
         private void LeftInputActive()
@@ -94,12 +84,12 @@ namespace CarGame.Control
         {
             _rotateValue = 0;
         }
-        private void AssignInput()
+        public void AssignInput(InputInfo inputGiven)
         {
-            switch (leftInput)
+            switch (inputGiven.LeftInput)
             {
                 case InputState.InputDown:
-                    InitialInput();
+                    //InitialInput();
                     break;
                 case InputState.InputActive:
                     LeftInputActive();
@@ -108,18 +98,23 @@ namespace CarGame.Control
                     DeactivateInput();
                     break;
             }
-            switch (rightInput)
+            switch (inputGiven.RightInput)
             {
                 case InputState.InputDown:
-                    InitialInput();
+                    //InitialInput();
                     break;
                 case InputState.InputActive:
-                   RightInputActive();
+                    RightInputActive();
                     break;
                 case InputState.InputUp:
                     DeactivateInput();
                     break;
             }
+        }
+
+        public void Crash()
+        {
+            GameManager.instance.ChangeState(GameState.GameLost);
         }
         #endregion
     }

@@ -7,7 +7,6 @@ namespace CarGame.Control
         protected InputState leftInput;
         protected InputState rightInput;
 
-
         protected virtual void Update()
         {
             MouseInput();
