@@ -38,8 +38,17 @@ namespace CarGame.Control
             }
             else if (Input.GetMouseButtonUp(0))
             {
-                leftInput = InputState.InputUp;
-                rightInput = InputState.InputUp;
+                if(leftInput == InputState.InputActive)
+                {
+                    leftInput = InputState.InputUp;
+                    rightInput = InputState.InputUp;
+                }
+                else
+                {
+                    leftInput = InputState.InputInactive;
+                    rightInput = InputState.InputInactive;
+                }
+
             }
         }
         private void KeyboardInput()
@@ -54,7 +63,14 @@ namespace CarGame.Control
             }
             else if (Input.GetKeyUp(KeyCode.A))
             {
-                leftInput = InputState.InputUp;
+                if (leftInput == InputState.InputActive)
+                {
+                    leftInput = InputState.InputUp;
+                }
+                else
+                {
+                    leftInput = InputState.InputInactive;
+                }
             }
             if (Input.GetKeyDown(KeyCode.D))
             {
@@ -66,7 +82,14 @@ namespace CarGame.Control
             }
             else if (Input.GetKeyUp(KeyCode.D))
             {
-                rightInput = InputState.InputUp;
+                if (rightInput == InputState.InputActive)
+                {
+                    rightInput = InputState.InputUp;
+                }
+                else
+                {
+                    rightInput = InputState.InputInactive;
+                }
             }
 
         }

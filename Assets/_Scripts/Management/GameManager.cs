@@ -13,7 +13,6 @@ namespace CarGame.Managers
         {
             get { return player; }
             set { player = value; }
-
         }
         [SerializeField] private Controller player;
 
@@ -77,7 +76,7 @@ namespace CarGame.Managers
         }
         private void GameWonState()
         {
-            if (_levelManager.CurrentIteration >= IRecord.maxIterationIndex)
+            if (_levelManager.CurrentIteration >= _recorder.MaxIterationIndex)
             {
                 _recorder.NextLevel();
                 _levelManager.NextLevel();

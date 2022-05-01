@@ -7,11 +7,18 @@ namespace CarGame.Record
 {
     public class PosRotRecorder : MonoBehaviour, IRecord
     {
+        public int MaxIterationIndex
+        {
+            get { return maxIterationIndex; }
+            set { maxIterationIndex = value; }
+        }
+        [SerializeField] private int maxIterationIndex;
+
         [Tooltip("Lower this value is, smoother the animations of recorded cars will be.")]
         [Range(0.005f, 0.08f)]
         [SerializeField] private float recordSmoothness;
 
-        [SerializeField] private GameObject[] recordedCar = new GameObject[7];
+        [SerializeField] private GameObject[] recordedCar;
 
         private List<PosRot>[] _carRecords = new List<PosRot>[8];
 
@@ -60,6 +67,10 @@ namespace CarGame.Record
         }
         public void RestartCurrentIteration(int currentIteration)
         {
+            for (int i = 0; i < recordedCar.Length; i++)
+            {
+                recordedCar[i].SetActive(false);
+            }
             _carRecords[currentIteration].Clear();
         }
         public void NextLevel()

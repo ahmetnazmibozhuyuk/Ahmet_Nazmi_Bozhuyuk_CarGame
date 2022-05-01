@@ -3,7 +3,7 @@ namespace CarGame.Record
 {
     public interface IRecord
     {
-        public const int maxIterationIndex = 7;
+        public int MaxIterationIndex { get; set; }
         public abstract void StartRecording(int currentIteration);
         public abstract void StartReplaying(int iteration);
         public abstract void RestartCurrentIteration(int currentIteration);
@@ -37,7 +37,7 @@ namespace CarGame
     }
     public enum InputState
     {
-        InputUp = 0, InputDown = 1, InputActive = 2
+        InputUp = 0, InputDown = 1, InputActive = 2, InputInactive = 3
     }
 }
 

@@ -10,7 +10,7 @@ namespace CarGame.Control
     public class Controller : InputAbstract
     {
         [Header("Movement Properties")]
-        [Range(0.1f,1f)]
+        [Range(0.1f, 1f)]
         [SerializeField] private float maxForwardSpeed;
         [Tooltip("Determines how fast the vehicle will accelerate upon start.")]
         [SerializeField] private float forwardAcceleration;
@@ -53,10 +53,19 @@ namespace CarGame.Control
         {
             if (collision.gameObject.GetComponent<ICrash>() == null)
             {
-                Debug.LogError("Crashed object "+collision.gameObject+ " has not implemented ICrash!");
+                Debug.LogError("Crashed object " + collision.gameObject + " has not implemented ICrash!");
                 return;
             }
             collision.gameObject.GetComponent<ICrash>().Crash();
+        }
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.gameObject.GetComponent<ICrash>() == null)
+            {
+                Debug.LogError("Crashed object " + other.gameObject + " has not implemented ICrash!");
+                return;
+            }
+            other.gameObject.GetComponent<ICrash>().Crash();
         }
 
 
@@ -107,6 +116,8 @@ namespace CarGame.Control
                 case InputState.InputUp:
                     DeactivateInput();
                     break;
+                default:
+                    break;
             }
             switch (rightInput)
             {
@@ -114,10 +125,12 @@ namespace CarGame.Control
                     InitialInput();
                     break;
                 case InputState.InputActive:
-                   RightInputActive();
+                    RightInputActive();
                     break;
                 case InputState.InputUp:
                     DeactivateInput();
+                    break;
+                default:
                     break;
             }
         }

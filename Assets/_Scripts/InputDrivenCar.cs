@@ -2,13 +2,8 @@ using System;
 using UnityEngine;
 using CarGame.Managers;
 
-
 namespace CarGame.Control
 {
-
-    //@todo: position and collisions aren't assigned properly.
-
-
     [RequireComponent(typeof(Collider), typeof(Rigidbody))]
 
     public class InputDrivenCar : InputAbstract,ICrash
@@ -38,15 +33,9 @@ namespace CarGame.Control
         {
             SetMovement();
         }
-        /// <summary>
-        /// Resets players acceleration and sets its position and rotation accordingly.
-        /// </summary>
-        /// <param name="position"></param>
-        /// <param name="rotation"></param>
-        public void InitializeCarForNextIteration(Vector3 position, Quaternion rotation)
+        private void OnEnable()
         {
             _lerpVal = 0;
-            transform.SetPositionAndRotation(position, rotation);
         }
 
         #region Input - Movement Handler
@@ -63,12 +52,6 @@ namespace CarGame.Control
             _speedValue = Mathf.Lerp(0, maxForwardSpeed * 0.5f, _lerpVal);
             _rigidbody.MovePosition(_rigidbody.position + transform.forward * _speedValue);
         }
-        private void InitialInput()
-        {
-            if (GameManager.instance.CurrentState == GameState.GameAwaitingStart) GameManager.instance.ChangeState(GameState.GameStarted);
-            Debug.Log("input initialized");
-        }
-
         private void LeftInputActive()
         {
             _rotateValue = -maxSteer;
@@ -76,7 +59,6 @@ namespace CarGame.Control
         }
         private void RightInputActive()
         {
-
             _rotateValue = maxSteer;
             SetRotation();
         }
@@ -88,30 +70,27 @@ namespace CarGame.Control
         {
             switch (inputGiven.LeftInput)
             {
-                case InputState.InputDown:
-                    //InitialInput();
-                    break;
                 case InputState.InputActive:
                     LeftInputActive();
                     break;
                 case InputState.InputUp:
                     DeactivateInput();
                     break;
+                default:
+                    break;
             }
             switch (inputGiven.RightInput)
             {
-                case InputState.InputDown:
-                    //InitialInput();
-                    break;
                 case InputState.InputActive:
                     RightInputActive();
                     break;
                 case InputState.InputUp:
                     DeactivateInput();
                     break;
+                default:
+                    break;
             }
         }
-
         public void Crash()
         {
             GameManager.instance.ChangeState(GameState.GameLost);
