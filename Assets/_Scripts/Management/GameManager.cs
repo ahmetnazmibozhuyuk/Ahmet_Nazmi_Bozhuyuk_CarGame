@@ -17,7 +17,7 @@ namespace CarGame.Managers
         }
         [SerializeField] private Controller player;
 
-        [SerializeField] private Recorder recorder;
+        public Recorder recorder;
 
         private LevelManager _levelManager;
         private UIManager _uiManager;
@@ -73,7 +73,7 @@ namespace CarGame.Managers
         }
         private void GameWonState()
         {
-            if (_levelManager.CurrentIteration >= Recorder.maxIterationIndex)
+            if (_levelManager.CurrentIteration >= recorder.maxIterationIndex)
             {
                 recorder.NextLevel();
                 _levelManager.NextLevel();
