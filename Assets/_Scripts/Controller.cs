@@ -34,7 +34,6 @@ namespace CarGame.Control
             base.Update();
             AssignInput();
         }
-
         private void FixedUpdate()
         {
             SetMovement();

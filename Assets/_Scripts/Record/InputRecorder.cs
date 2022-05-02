@@ -6,8 +6,6 @@ using CarGame.Control;
 
 namespace CarGame.Record
 {
-
-    //@todo: input recording has some sync issues that needs to be addressed - possibly due to frame differences
     public class InputRecorder : InputAbstract, IRecord
     {
         public int MaxIterationIndex
@@ -23,13 +21,15 @@ namespace CarGame.Record
 
         private List<InputInfo>[] _inputInfo = new List<InputInfo>[8];
 
-
         private void Awake()
         {
             for (int i = 0; i < _inputInfo.Length; i++)
             {
                 _inputInfo[i] = new();
             }
+
+            Application.targetFrameRate = 30; // todo : inconsistent frame rates may make recorded cars move out of sync and FixedUpdate method may consume inputs  
+                                               // so for input recorder and controller to work consistently target frame rate is fixed
         }
         public void StartRecording(int currentIteration)
         {
@@ -54,7 +54,7 @@ namespace CarGame.Record
             while (GameManager.instance.CurrentState == GameState.GameStarted)
             {
                 _inputInfo[currentIteration].Add(new InputInfo(leftInput, rightInput));
-                yield return new WaitForFixedUpdate();
+                yield return null;
             }
             yield break;
         }
@@ -69,7 +69,7 @@ namespace CarGame.Record
                 }
                 recordedCar[carIndex].AssignInput(_inputInfo[carIndex][i]);
                 i++;
-                yield return new WaitForFixedUpdate();
+                yield return null;
             }
             yield break;
         }

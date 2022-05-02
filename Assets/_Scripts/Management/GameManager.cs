@@ -29,7 +29,6 @@ namespace CarGame.Managers
             _levelManager = GetComponent<LevelManager>();
             _uiManager = GetComponent<UIManager>();
             _recorder = recorderObj.GetComponent<IRecord>();
-            
         }
 
         private void Start()
