@@ -65,6 +65,7 @@ namespace CarGame.Managers
         {
             //Method for pre game.
             //_uiManager.GameStartText(true);
+
         }
         private void GameStartedState()
         {
@@ -80,7 +81,6 @@ namespace CarGame.Managers
                 _recorder.NextLevel();
                 _levelManager.NextLevel();
                 ChangeState(GameState.GameAwaitingStart);
-
             }
             else
             {
@@ -92,6 +92,10 @@ namespace CarGame.Managers
         {
             _recorder.RestartCurrentIteration(_levelManager.CurrentIteration);
             _levelManager.RestartIteration();
+        }
+        public int CurrentIteration()
+        {
+            return _levelManager.CurrentIteration;
         }
     }
     public enum GameState

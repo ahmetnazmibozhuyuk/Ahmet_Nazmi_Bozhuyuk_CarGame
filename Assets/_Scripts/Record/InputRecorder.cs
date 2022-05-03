@@ -28,8 +28,8 @@ namespace CarGame.Record
                 _inputInfo[i] = new();
             }
 
-            Application.targetFrameRate = 30; // todo : inconsistent frame rates may make recorded cars move out of sync and FixedUpdate method may consume inputs  
-                                               // so for input recorder and controller to work consistently target frame rate is fixed
+            Application.targetFrameRate = -1; // todo : inconsistent frame rates may make recorded cars move out of sync and FixedUpdate method may consume inputs  
+                                               // so for input recorder and controller to work consistently target frame rate needs to be 30
         }
         public void StartRecording(int currentIteration)
         {
