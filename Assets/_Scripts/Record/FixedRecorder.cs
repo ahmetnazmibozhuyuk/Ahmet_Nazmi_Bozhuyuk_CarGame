@@ -4,8 +4,6 @@ using CarGame.Managers;
 
 namespace CarGame.Record
 {
-
-    // todo : refactor fixed recorder; segregate IRecord interface if necessary
     public class FixedRecorder : MonoBehaviour, IRecord
     {
         public int MaxIterationIndex
@@ -20,7 +18,7 @@ namespace CarGame.Record
         private List<PosRot>[] _carRecords = new List<PosRot>[8];
 
 
-        private int[] j = new int[8];
+        private int[] _carRecordCounter = new int[8];
         private void Awake()
         {
             for (int i = 0; i < _carRecords.Length; i++)
@@ -35,14 +33,14 @@ namespace CarGame.Record
             ReplayCar();
         }
 
+        // todo : Remove StartRecording and StartReplaying from interface and GameManager if you want to use FixedUpdate to record position and rotation; refactor accordingly.
         public void StartRecording(int currentIteration)
         {
-            for(int i = 0; i < j.Length; i++)
+            for(int i = 0; i < _carRecordCounter.Length; i++)
             {
-                j[i] = 0;
+                _carRecordCounter[i] = 0;
             }
         }
-
         public void StartReplaying(int iteration)
         {
             //throw new System.NotImplementedException();
@@ -65,20 +63,20 @@ namespace CarGame.Record
         }
         private void MoveReplayCar(int i)
         {
-            if (_carRecords[i].Count < j[i] + 1)
+            if (_carRecords[i].Count < _carRecordCounter[i] + 1)
             {
                 recordedCar[i].SetActive(false);
                 return;
             }
-            recordedCar[i].transform.SetPositionAndRotation(_carRecords[i][j[i]].currentPosition, _carRecords[i][j[i]].currentRotation);
-            j[i]++;
+            recordedCar[i].transform.SetPositionAndRotation(_carRecords[i][_carRecordCounter[i]].currentPosition, _carRecords[i][_carRecordCounter[i]].currentRotation);
+            _carRecordCounter[i]++;
         }
         public void RestartCurrentIteration(int currentIteration)
         {
             for (int i = 0; i < recordedCar.Length; i++)
             {
                 recordedCar[i].SetActive(false);
-                j[i] = 0;
+                _carRecordCounter[i] = 0;
             }
             _carRecords[currentIteration].Clear();
         }
